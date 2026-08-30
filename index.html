@@ -73,6 +73,13 @@
             border: 1px solid #e8e8e8;
             border-radius: 16px;
             padding: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
         }
 
         .card h2 {
@@ -110,13 +117,87 @@
             color: #555;
         }
 
-        /* Modal */
+        /* DETAIL PAGE */
+
+        .back-button {
+            background: transparent;
+            color: #555;
+            padding: 0;
+            margin-bottom: 35px;
+        }
+
+        .detail-title {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .goal {
+            color: #777;
+            font-size: 18px;
+            margin-bottom: 35px;
+        }
+
+        .detail-card {
+            background: white;
+            border: 1px solid #e8e8e8;
+            border-radius: 18px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .big-progress {
+            height: 14px;
+            background: #eeeeee;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0 12px;
+        }
+
+        .big-progress .progress {
+            background: #171717;
+        }
+
+        .progress-number {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .update-button {
+            margin-top: 20px;
+        }
+
+        .participant {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .participant:last-child {
+            border-bottom: none;
+        }
+
+        .finish-button {
+            background: white;
+            color: #171717;
+            border: 1px solid #ddd;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* MODAL */
 
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(0,0,0,0.45);
             justify-content: center;
             align-items: center;
             padding: 20px;
@@ -174,16 +255,14 @@
         }
 
         @media (max-width: 700px) {
+
             .challenges {
                 grid-template-columns: 1fr;
             }
 
-            h1 {
+            h1,
+            .detail-title {
                 font-size: 32px;
-            }
-
-            header {
-                align-items: flex-start;
             }
         }
     </style>
@@ -193,73 +272,49 @@
 
 <div class="container">
 
-    <header>
-        <div class="logo">Challenge</div>
+    <!-- HOME -->
 
-        <button onclick="openModal()">
-            + New Challenge
+    <div id="homePage">
+
+        <header>
+            <div class="logo">Challenge</div>
+
+            <button onclick="openModal()">
+                + New Challenge
+            </button>
+        </header>
+
+        <main>
+
+            <h1>My Challenges</h1>
+
+            <p class="subtitle">
+                Maqsadingni belgilagin. Boshqalar bilan birga erish.
+            </p>
+
+            <div class="challenges" id="challengeList"></div>
+
+        </main>
+
+    </div>
+
+
+    <!-- DETAIL -->
+
+    <div id="detailPage" style="display:none;">
+
+        <button class="back-button" onclick="showHome()">
+            ← Back
         </button>
-    </header>
 
-    <main>
+        <div id="detailContent"></div>
 
-        <h1>My Challenges</h1>
-
-        <p class="subtitle">
-            Maqsadingni belgilagin. Boshqalar bilan birga erish.
-        </p>
-
-        <div class="challenges" id="challengeList">
-
-            <div class="card">
-                <h2>IELTS 7.5 olish</h2>
-
-                <div class="deadline">
-                    Deadline: 18 dekabr 2026
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress" style="width: 68%;"></div>
-                </div>
-
-                <div class="progress-text">
-                    68% completed
-                </div>
-
-                <div class="participants">
-                    👤 3 participants
-                </div>
-            </div>
-
-
-            <div class="card">
-                <h2>100 km yugurish</h2>
-
-                <div class="deadline">
-                    Deadline: 30 sentabr 2026
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress" style="width: 35%;"></div>
-                </div>
-
-                <div class="progress-text">
-                    35% completed
-                </div>
-
-                <div class="participants">
-                    👤 5 participants
-                </div>
-            </div>
-
-        </div>
-
-    </main>
+    </div>
 
 </div>
 
 
-<!-- Create Challenge Modal -->
+<!-- CREATE MODAL -->
 
 <div class="modal-overlay" id="modal">
 
@@ -275,14 +330,11 @@
 
         </div>
 
-
         <form onsubmit="createChallenge(event)">
 
             <div class="form-group">
 
-                <label>
-                    Challenge name
-                </label>
+                <label>Challenge name</label>
 
                 <input
                     type="text"
@@ -296,9 +348,7 @@
 
             <div class="form-group">
 
-                <label>
-                    Goal
-                </label>
+                <label>Goal</label>
 
                 <input
                     type="text"
@@ -312,9 +362,7 @@
 
             <div class="form-group">
 
-                <label>
-                    Deadline
-                </label>
+                <label>Deadline</label>
 
                 <input
                     type="date"
@@ -327,9 +375,7 @@
 
             <div class="form-group">
 
-                <label>
-                    Who can join?
-                </label>
+                <label>Who can join?</label>
 
                 <select id="challengeAccess">
 
@@ -361,15 +407,309 @@
 </div>
 
 
+<!-- UPDATE PROGRESS MODAL -->
+
+<div class="modal-overlay" id="progressModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h2>Update Progress</h2>
+
+            <button class="close" onclick="closeProgressModal()">
+                ×
+            </button>
+
+        </div>
+
+        <form onsubmit="updateProgress(event)">
+
+            <div class="form-group">
+
+                <label>Your progress (%)</label>
+
+                <input
+                    type="number"
+                    id="progressInput"
+                    min="0"
+                    max="100"
+                    placeholder="0 - 100"
+                    required
+                >
+
+            </div>
+
+            <button class="create-button" type="submit">
+                Save Progress
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
 <script>
 
+    let challenges = JSON.parse(
+        localStorage.getItem("challenges")
+    ) || [
+
+        {
+            id: 1,
+            name: "IELTS 7.5 olish",
+            goal: "IELTS'dan 7.5 olish",
+            deadline: "2026-12-18",
+            progress: 68,
+            participants: 3
+        },
+
+        {
+            id: 2,
+            name: "100 km yugurish",
+            goal: "100 kilometr yugurish",
+            deadline: "2026-09-30",
+            progress: 35,
+            participants: 5
+        }
+
+    ];
+
+
+    let selectedChallengeId = null;
+
+
+    function saveChallenges() {
+
+        localStorage.setItem(
+            "challenges",
+            JSON.stringify(challenges)
+        );
+
+    }
+
+
+    function formatDate(dateString) {
+
+        const date = new Date(dateString);
+
+        return date.toLocaleDateString(
+            "uz-UZ",
+            {
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+    }
+
+
+    function renderHome() {
+
+        const list =
+            document.getElementById("challengeList");
+
+        list.innerHTML = "";
+
+
+        challenges.forEach(challenge => {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "card";
+
+            card.onclick = function() {
+
+                showDetail(challenge.id);
+
+            };
+
+
+            card.innerHTML = `
+
+                <h2>
+                    ${challenge.name}
+                </h2>
+
+                <div class="deadline">
+                    Deadline:
+                    ${formatDate(challenge.deadline)}
+                </div>
+
+                <div class="progress-bar">
+
+                    <div
+                        class="progress"
+                        style="width:${challenge.progress}%"
+                    ></div>
+
+                </div>
+
+                <div class="progress-text">
+                    ${challenge.progress}% completed
+                </div>
+
+                <div class="participants">
+                    👤 ${challenge.participants} participants
+                </div>
+
+            `;
+
+
+            list.appendChild(card);
+
+        });
+
+    }
+
+
+    function showDetail(id) {
+
+        const challenge =
+            challenges.find(c => c.id === id);
+
+        if (!challenge) return;
+
+
+        selectedChallengeId = id;
+
+
+        document.getElementById("homePage")
+            .style.display = "none";
+
+
+        document.getElementById("detailPage")
+            .style.display = "block";
+
+
+        const content =
+            document.getElementById("detailContent");
+
+
+        content.innerHTML = `
+
+            <h1 class="detail-title">
+                ${challenge.name}
+            </h1>
+
+            <p class="goal">
+                ${challenge.goal}
+            </p>
+
+
+            <div class="detail-card">
+
+                <div class="section-title">
+                    Deadline
+                </div>
+
+                <div class="deadline">
+                    ${formatDate(challenge.deadline)}
+                </div>
+
+            </div>
+
+
+            <div class="detail-card">
+
+                <div class="section-title">
+                    My Progress
+                </div>
+
+                <div class="progress-number">
+                    ${challenge.progress}%
+                </div>
+
+                <div class="big-progress">
+
+                    <div
+                        class="progress"
+                        style="width:${challenge.progress}%"
+                    ></div>
+
+                </div>
+
+                <button
+                    class="update-button"
+                    onclick="openProgressModal()"
+                >
+                    Update Progress
+                </button>
+
+            </div>
+
+
+            <div class="detail-card">
+
+                <div class="section-title">
+                    Participants
+                </div>
+
+                <div class="participant">
+                    <span>👤 You</span>
+                    <strong>${challenge.progress}%</strong>
+                </div>
+
+                <div class="participant">
+                    <span>👤 Aziz</span>
+                    <strong>65%</strong>
+                </div>
+
+                <div class="participant">
+                    <span>👤 Sardor</span>
+                    <strong>42%</strong>
+                </div>
+
+            </div>
+
+
+            <div class="detail-card">
+
+                <div class="section-title">
+                    Challenge
+                </div>
+
+                <button class="finish-button">
+                    🏆 Finish Challenge
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+
+    function showHome() {
+
+        document.getElementById("detailPage")
+            .style.display = "none";
+
+        document.getElementById("homePage")
+            .style.display = "block";
+
+        renderHome();
+
+    }
+
+
     function openModal() {
-        document.getElementById("modal").style.display = "flex";
+
+        document.getElementById("modal")
+            .style.display = "flex";
+
     }
 
 
     function closeModal() {
-        document.getElementById("modal").style.display = "none";
+
+        document.getElementById("modal")
+            .style.display = "none";
+
     }
 
 
@@ -377,72 +717,118 @@
 
         event.preventDefault();
 
+
         const name =
-            document.getElementById("challengeName").value;
+            document.getElementById("challengeName")
+                .value;
 
         const goal =
-            document.getElementById("challengeGoal").value;
+            document.getElementById("challengeGoal")
+                .value;
 
         const deadline =
-            document.getElementById("challengeDeadline").value;
+            document.getElementById("challengeDeadline")
+                .value;
 
 
-        const date = new Date(deadline);
+        const newChallenge = {
 
-        const formattedDate =
-            date.toLocaleDateString("uz-UZ", {
-                day: "numeric",
-                month: "long",
-                year: "numeric"
-            });
+            id: Date.now(),
 
+            name: name,
 
-        const card = document.createElement("div");
+            goal: goal,
 
-        card.className = "card";
+            deadline: deadline,
 
+            progress: 0,
 
-        card.innerHTML = `
-            <h2>${name}</h2>
+            participants: 1
 
-            <div class="deadline">
-                Deadline: ${formattedDate}
-            </div>
-
-            <div class="progress-bar">
-                <div class="progress" style="width: 0%;"></div>
-            </div>
-
-            <div class="progress-text">
-                0% completed
-            </div>
-
-            <div class="participants">
-                👤 1 participant
-            </div>
-        `;
+        };
 
 
-        document
-            .getElementById("challengeList")
-            .appendChild(card);
+        challenges.push(newChallenge);
 
 
-        document
-            .getElementById("challengeName")
-            .value = "";
+        saveChallenges();
 
-        document
-            .getElementById("challengeGoal")
-            .value = "";
-
-        document
-            .getElementById("challengeDeadline")
-            .value = "";
-
+        renderHome();
 
         closeModal();
+
+
+        document.getElementById("challengeName")
+            .value = "";
+
+        document.getElementById("challengeGoal")
+            .value = "";
+
+        document.getElementById("challengeDeadline")
+            .value = "";
+
     }
+
+
+    function openProgressModal() {
+
+        const challenge =
+            challenges.find(
+                c => c.id === selectedChallengeId
+            );
+
+
+        document.getElementById("progressInput")
+            .value = challenge.progress;
+
+
+        document.getElementById("progressModal")
+            .style.display = "flex";
+
+    }
+
+
+    function closeProgressModal() {
+
+        document.getElementById("progressModal")
+            .style.display = "none";
+
+    }
+
+
+    function updateProgress(event) {
+
+        event.preventDefault();
+
+
+        const value =
+            Number(
+                document.getElementById("progressInput")
+                    .value
+            );
+
+
+        const challenge =
+            challenges.find(
+                c => c.id === selectedChallengeId
+            );
+
+
+        challenge.progress = value;
+
+
+        saveChallenges();
+
+
+        closeProgressModal();
+
+
+        showDetail(selectedChallengeId);
+
+    }
+
+
+    renderHome();
 
 </script>
 
