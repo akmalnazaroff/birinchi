@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f5;
+            color: #171717;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        button {
+            border: none;
+            background: #171717;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            color: #777;
+            font-size: 17px;
+            margin-bottom: 40px;
+        }
+
+        .challenges {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e8e8e8;
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .deadline {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #eeeeee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            background: #171717;
+            width: 68%;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .participants {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        @media (max-width: 700px) {
+            .challenges {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <div class="logo">Challenge</div>
+            <button>+ New Challenge</button>
+        </header>
+
+        <main>
+
+            <h1>My Challenges</h1>
+
+            <p class="subtitle">
+                Maqsadingni belgilagin. Boshqalar bilan birga erish.
+            </p>
+
+            <div class="challenges">
+
+                <div class="card">
+                    <h2>IELTS 7.5 olish</h2>
+
+                    <div class="deadline">
+                        Deadline: 18 dekabr 2026
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+
+                    <div class="progress-text">
+                        68% completed
+                    </div>
+
+                    <div class="participants">
+                        👤 3 participants
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <h2>100 km yugurish</h2>
+
+                    <div class="deadline">
+                        Deadline: 30 sentabr 2026
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 35%;"></div>
+                    </div>
+
+                    <div class="progress-text">
+                        35% completed
+                    </div>
+
+                    <div class="participants">
+                        👤 5 participants
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
