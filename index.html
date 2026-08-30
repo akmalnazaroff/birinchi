@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Challenge</title>
 
     <style>
@@ -44,6 +45,10 @@
             border-radius: 10px;
             font-size: 15px;
             cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.85;
         }
 
         h1 {
@@ -92,7 +97,6 @@
         .progress {
             height: 100%;
             background: #171717;
-            width: 68%;
         }
 
         .progress-text {
@@ -106,6 +110,69 @@
             color: #555;
         }
 
+        /* Modal */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 18px;
+            padding: 30px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+        }
+
+        .close {
+            background: transparent;
+            color: #777;
+            font-size: 25px;
+            padding: 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 15px;
+        }
+
+        .create-button {
+            width: 100%;
+            margin-top: 10px;
+        }
+
         @media (max-width: 700px) {
             .challenges {
                 grid-template-columns: 1fr;
@@ -114,75 +181,270 @@
             h1 {
                 font-size: 32px;
             }
+
+            header {
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <header>
-            <div class="logo">Challenge</div>
-            <button>+ New Challenge</button>
-        </header>
+    <header>
+        <div class="logo">Challenge</div>
 
-        <main>
+        <button onclick="openModal()">
+            + New Challenge
+        </button>
+    </header>
 
-            <h1>My Challenges</h1>
+    <main>
 
-            <p class="subtitle">
-                Maqsadingni belgilagin. Boshqalar bilan birga erish.
-            </p>
+        <h1>My Challenges</h1>
 
-            <div class="challenges">
+        <p class="subtitle">
+            Maqsadingni belgilagin. Boshqalar bilan birga erish.
+        </p>
 
-                <div class="card">
-                    <h2>IELTS 7.5 olish</h2>
+        <div class="challenges" id="challengeList">
 
-                    <div class="deadline">
-                        Deadline: 18 dekabr 2026
-                    </div>
+            <div class="card">
+                <h2>IELTS 7.5 olish</h2>
 
-                    <div class="progress-bar">
-                        <div class="progress"></div>
-                    </div>
-
-                    <div class="progress-text">
-                        68% completed
-                    </div>
-
-                    <div class="participants">
-                        👤 3 participants
-                    </div>
+                <div class="deadline">
+                    Deadline: 18 dekabr 2026
                 </div>
 
-
-                <div class="card">
-                    <h2>100 km yugurish</h2>
-
-                    <div class="deadline">
-                        Deadline: 30 sentabr 2026
-                    </div>
-
-                    <div class="progress-bar">
-                        <div class="progress" style="width: 35%;"></div>
-                    </div>
-
-                    <div class="progress-text">
-                        35% completed
-                    </div>
-
-                    <div class="participants">
-                        👤 5 participants
-                    </div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 68%;"></div>
                 </div>
+
+                <div class="progress-text">
+                    68% completed
+                </div>
+
+                <div class="participants">
+                    👤 3 participants
+                </div>
+            </div>
+
+
+            <div class="card">
+                <h2>100 km yugurish</h2>
+
+                <div class="deadline">
+                    Deadline: 30 sentabr 2026
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress" style="width: 35%;"></div>
+                </div>
+
+                <div class="progress-text">
+                    35% completed
+                </div>
+
+                <div class="participants">
+                    👤 5 participants
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- Create Challenge Modal -->
+
+<div class="modal-overlay" id="modal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h2>Create Challenge</h2>
+
+            <button class="close" onclick="closeModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <form onsubmit="createChallenge(event)">
+
+            <div class="form-group">
+
+                <label>
+                    Challenge name
+                </label>
+
+                <input
+                    type="text"
+                    id="challengeName"
+                    placeholder="Masalan: IELTS 7.5"
+                    required
+                >
 
             </div>
 
-        </main>
+
+            <div class="form-group">
+
+                <label>
+                    Goal
+                </label>
+
+                <input
+                    type="text"
+                    id="challengeGoal"
+                    placeholder="Masalan: IELTS'dan 7.5 olish"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Deadline
+                </label>
+
+                <input
+                    type="date"
+                    id="challengeDeadline"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Who can join?
+                </label>
+
+                <select id="challengeAccess">
+
+                    <option value="private">
+                        Only me
+                    </option>
+
+                    <option value="invite">
+                        Invite people
+                    </option>
+
+                    <option value="link">
+                        Anyone with link
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button class="create-button" type="submit">
+                Create Challenge
+            </button>
+
+        </form>
 
     </div>
+
+</div>
+
+
+<script>
+
+    function openModal() {
+        document.getElementById("modal").style.display = "flex";
+    }
+
+
+    function closeModal() {
+        document.getElementById("modal").style.display = "none";
+    }
+
+
+    function createChallenge(event) {
+
+        event.preventDefault();
+
+        const name =
+            document.getElementById("challengeName").value;
+
+        const goal =
+            document.getElementById("challengeGoal").value;
+
+        const deadline =
+            document.getElementById("challengeDeadline").value;
+
+
+        const date = new Date(deadline);
+
+        const formattedDate =
+            date.toLocaleDateString("uz-UZ", {
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            });
+
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+
+
+        card.innerHTML = `
+            <h2>${name}</h2>
+
+            <div class="deadline">
+                Deadline: ${formattedDate}
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress" style="width: 0%;"></div>
+            </div>
+
+            <div class="progress-text">
+                0% completed
+            </div>
+
+            <div class="participants">
+                👤 1 participant
+            </div>
+        `;
+
+
+        document
+            .getElementById("challengeList")
+            .appendChild(card);
+
+
+        document
+            .getElementById("challengeName")
+            .value = "";
+
+        document
+            .getElementById("challengeGoal")
+            .value = "";
+
+        document
+            .getElementById("challengeDeadline")
+            .value = "";
+
+
+        closeModal();
+    }
+
+</script>
 
 </body>
 </html>
