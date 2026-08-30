@@ -1,0 +1,2 @@
+# birinchi
+shaxsiy sinov platformasi
