@@ -462,3 +462,442 @@ const supabase = window.supabase.createClient(
     SUPABASE_KEY
 );
 </script>
+<script>
+
+let challenges = [];
+let selectedChallengeId = null;
+
+
+// =========================
+// LOAD CHALLENGES
+// =========================
+
+async function loadChallenges() {
+
+    const { data, error } = await supabase
+        .from("challenges")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Error loading challenges:", error);
+        alert("Challenge'larni yuklashda xatolik yuz berdi.");
+        return;
+    }
+
+    challenges = data || [];
+
+    renderChallenges();
+}
+
+
+// =========================
+// RENDER CHALLENGES
+// =========================
+
+function renderChallenges() {
+
+    const list = document.getElementById("challengeList");
+
+    list.innerHTML = "";
+
+    if (challenges.length === 0) {
+
+        list.innerHTML = `
+            <p style="color:#777;">
+                Hozircha challenge yo‘q.
+            </p>
+        `;
+
+        return;
+    }
+
+
+    challenges.forEach(challenge => {
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+
+        card.onclick = () => showDetail(challenge.id);
+
+
+        card.innerHTML = `
+
+            <h2>
+                ${escapeHtml(challenge.title)}
+            </h2>
+
+            <div class="deadline">
+                Deadline: ${formatDate(challenge.deadline)}
+            </div>
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress"
+                    style="width:${challenge.progress || 0}%"
+                ></div>
+
+            </div>
+
+            <div class="progress-text">
+                ${challenge.progress || 0}% completed
+            </div>
+
+            <div class="participants">
+                👥 ${challenge.participants || 1} participants
+            </div>
+
+        `;
+
+        list.appendChild(card);
+
+    });
+}
+
+
+// =========================
+// SHOW DETAIL
+// =========================
+
+function showDetail(id) {
+
+    selectedChallengeId = id;
+
+    const challenge = challenges.find(
+        item => item.id === id
+    );
+
+    if (!challenge) return;
+
+
+    document.getElementById("homePage").style.display = "none";
+
+    document.getElementById("detailPage").style.display = "block";
+
+
+    const content = document.getElementById("detailContent");
+
+
+    content.innerHTML = `
+
+        <h1 class="detail-title">
+            ${escapeHtml(challenge.title)}
+        </h1>
+
+        <p class="goal">
+            ${escapeHtml(challenge.description || "")}
+        </p>
+
+
+        <div class="detail-card">
+
+            <div class="section-title">
+                Progress
+            </div>
+
+            <div class="big-progress">
+
+                <div
+                    class="progress"
+                    style="width:${challenge.progress || 0}%"
+                ></div>
+
+            </div>
+
+            <div class="progress-number">
+                ${challenge.progress || 0}%
+            </div>
+
+
+            <button
+                class="update-button"
+                onclick="openProgressModal()"
+            >
+                Update Progress
+            </button>
+
+        </div>
+
+
+        <div class="detail-card">
+
+            <div class="section-title">
+                Challenge information
+            </div>
+
+            <div class="participant">
+
+                <span>Deadline</span>
+
+                <strong>
+                    ${formatDate(challenge.deadline)}
+                </strong>
+
+            </div>
+
+
+            <div class="participant">
+
+                <span>Participants</span>
+
+                <strong>
+                    ${challenge.participants || 1}
+                </strong>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+// =========================
+// BACK HOME
+// =========================
+
+function showHome() {
+
+    document.getElementById("detailPage").style.display = "none";
+
+    document.getElementById("homePage").style.display = "block";
+
+    selectedChallengeId = null;
+
+    loadChallenges();
+}
+
+
+// =========================
+// CREATE CHALLENGE MODAL
+// =========================
+
+function openModal() {
+
+    document.getElementById("modal").style.display = "flex";
+
+}
+
+
+function closeModal() {
+
+    document.getElementById("modal").style.display = "none";
+
+}
+
+
+// =========================
+// CREATE CHALLENGE
+// =========================
+
+async function createChallenge(event) {
+
+    event.preventDefault();
+
+
+    const title =
+        document.getElementById("challengeName").value.trim();
+
+    const description =
+        document.getElementById("challengeGoal").value.trim();
+
+    const deadline =
+        document.getElementById("challengeDeadline").value;
+
+    const access =
+        document.getElementById("challengeAccess").value;
+
+
+    const { data, error } = await supabase
+
+        .from("challenges")
+
+        .insert({
+
+            title: title,
+
+            description: description,
+
+            deadline: deadline,
+
+            progress: 0,
+
+            participants: 1
+
+        })
+
+        .select();
+
+
+    if (error) {
+
+        console.error("Error creating challenge:", error);
+
+        alert(
+            "Challenge yaratishda xatolik:\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    console.log("Created:", data);
+
+    console.log("Access:", access);
+
+
+    closeModal();
+
+
+    document.querySelector("#modal form").reset();
+
+
+    await loadChallenges();
+
+}
+
+
+// =========================
+// PROGRESS MODAL
+// =========================
+
+function openProgressModal() {
+
+    const challenge = challenges.find(
+        item => item.id === selectedChallengeId
+    );
+
+    if (!challenge) return;
+
+
+    document.getElementById("progressInput").value =
+        challenge.progress || 0;
+
+
+    document.getElementById("progressModal").style.display = "flex";
+
+}
+
+
+function closeProgressModal() {
+
+    document.getElementById("progressModal").style.display = "none";
+
+}
+
+
+// =========================
+// UPDATE PROGRESS
+// =========================
+
+async function updateProgress(event) {
+
+    event.preventDefault();
+
+
+    if (!selectedChallengeId) return;
+
+
+    const progress = Number(
+        document.getElementById("progressInput").value
+    );
+
+
+    if (progress < 0 || progress > 100) {
+
+        alert("Progress 0 dan 100 gacha bo‘lishi kerak.");
+
+        return;
+    }
+
+
+    const { error } = await supabase
+
+        .from("challenges")
+
+        .update({
+
+            progress: progress
+
+        })
+
+        .eq("id", selectedChallengeId);
+
+
+    if (error) {
+
+        console.error("Error updating progress:", error);
+
+        alert(
+            "Progressni saqlashda xatolik:\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    closeProgressModal();
+
+
+    await loadChallenges();
+
+
+    showDetail(selectedChallengeId);
+
+}
+
+
+// =========================
+// HELPERS
+// =========================
+
+function formatDate(date) {
+
+    if (!date) return "—";
+
+
+    const parts = date.split("-");
+
+
+    if (parts.length === 3) {
+
+        return `${parts[2]}.${parts[1]}.${parts[0]}`;
+
+    }
+
+
+    return date;
+}
+
+
+function escapeHtml(text) {
+
+    if (!text) return "";
+
+
+    return text
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+
+}
+
+
+// =========================
+// START APP
+// =========================
+
+loadChallenges();
+
+</script>
